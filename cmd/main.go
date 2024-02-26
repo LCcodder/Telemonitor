@@ -11,6 +11,7 @@ import (
 	"telemonitor/config"
 	"telemonitor/internal/telegram/auth"
 	"telemonitor/internal/telegram/commands"
+	"telemonitor/internal/whitelist"
 )
 
 const (
@@ -18,8 +19,15 @@ const (
 )
 
 func main() {
-	config.LoadConfig(configPath)
+	config.PathFromEntrypoint = "../config.json"
+	config.LoadConfig()
+	name := "mr. penis"
+	//whitelist.AddToWhitelist(&name)
 
+	// config.Cfg.AuthParams.Whitelist = append(config.Cfg.AuthParams.Whitelist, "roma")
+
+	// config.WriteConfig(configPath, config.Cfg)
+	whitelist.RemoveFromWhitelist(&name)
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
@@ -29,7 +37,7 @@ func main() {
 	}
 
 	options := []bot.Option{
-		bot.WithMiddlewares(auth.AuthMiddleware),
+		bot.WithMiddlewares(auth.WhitelistAuthMiddleware),
 	}
 
 	b, err := bot.New(token, options...)
@@ -45,5 +53,7 @@ func main() {
 func registerHandlers(b *bot.Bot) {
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/help", 0, commands.HelpHandler)
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/info", 0, commands.InfoHandler)
+	b.RegisterHandler(bot.HandlerTypeMessageText, "/add", 0, commands.AddToWhitelistHandler)
+
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/mem", 0, commands.MemoryHandler)
 }
