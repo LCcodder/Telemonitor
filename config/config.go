@@ -1,7 +1,6 @@
 package config
 
 import (
-	"bytes"
 	"encoding/json"
 	"os"
 
@@ -35,25 +34,4 @@ func LoadConfig() *Config {
 	slices.Sort(Cfg.AuthParams.Whitelist)
 
 	return &Cfg
-}
-
-func WriteConfig(newCfg Config) (bool, error) {
-	file, openErr := os.OpenFile(PathFromEntrypoint, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
-	if openErr != nil {
-		return false, openErr
-	}
-	defer file.Close()
-
-	writeData := new(bytes.Buffer)
-	encodeErr := json.NewEncoder(writeData).Encode(newCfg)
-	if encodeErr != nil {
-		return false, encodeErr
-	}
-
-	writeErr := os.WriteFile(PathFromEntrypoint, writeData.Bytes(), 0777)
-	if writeErr != nil {
-		return false, writeErr
-	}
-
-	return true, nil
 }

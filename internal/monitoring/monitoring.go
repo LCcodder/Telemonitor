@@ -4,13 +4,17 @@ import (
 	"fmt"
 
 	"github.com/mackerelio/go-osstat/memory"
-	//"github.com/mackerelio/go-osstat/network"
+	"github.com/mackerelio/go-osstat/network"
+)
+
+const (
+	errorMessage string = "An <b>unknown error</b> was occured during metrics gaining...\nMake sure you running bot in <i>sudo</i>"
 )
 
 func GetMemoryLoad() string {
 	memoryInfo, err := memory.Get()
 	if err != nil {
-		return "An <b>unknown error</b> was occured during metrics gaining...\nMake sure you running bot in <i>sudo</i>"
+		return errorMessage
 	}
 
 	return fmt.Sprintf(
@@ -24,22 +28,22 @@ func GetMemoryLoad() string {
 	)
 }
 
-// func GetNetworkLoad() string {
-// 	networkInfo, err := network.Get()
-// 	if err != nil {
-//     	return "*An unknown error was occured during metrics gaining...\nMake sure you running bot in* `sudo`"
-//     }
-
-//     return fmt.Sprintf(
-//         networkInfo.
-//     )
-
-// }
-
-// func GetDiskLoad() string {
-// 	diskInfo, err := disk.Get()
-// 	if err != nil {
-// 		return "*An unknown error was occured during metrics gaining...\nMake sure you running bot in* `sudo`"
-// 	}
-
-// }
+func GetNetworkLoad() string {
+	networkInfo, err := network.Get()
+	if err != nil {
+		return errorMessage
+	}
+	stats := ""
+	for _, driver := range networkInfo {
+		stats += fmt.Sprintf(
+			"<b>Showing info for interface</b> <i>%s</i>\n<b>Outcome:</b> %d <i>bytes</i>\n<b>Income:</b> %d <i>bytes</i>\n\n",
+			driver.Name,
+			driver.RxBytes,
+			driver.TxBytes,
+		)
+	}
+	if stats == "" {
+		return errorMessage
+	}
+	return stats
+}
