@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-telegram/bot"
 
+	"github.com/rafacas/sysstats"
 	"telemonitor/config"
 	"telemonitor/internal/telegram/auth"
 	"telemonitor/internal/telegram/commands"
@@ -41,6 +42,7 @@ func main() {
 	registerHandlers(bot)
 
 	bot.Start(ctx)
+
 }
 
 func registerHandlers(b *bot.Bot) {
@@ -49,4 +51,6 @@ func registerHandlers(b *bot.Bot) {
 
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/mem", 0, commands.MemoryLoadHandler)
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/net", 0, commands.NetworkLoadHandler)
+	b.RegisterHandler(bot.HandlerTypeMessageText, "/cpu", 0, commands.CpuLoadHandler)
+	b.RegisterHandler(bot.HandlerTypeMessageText, "/disk", 0, commands.DiskLoadHandler)
 }

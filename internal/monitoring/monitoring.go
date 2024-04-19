@@ -3,6 +3,9 @@ package monitoring
 import (
 	"fmt"
 
+	"github.com/k0kubun/pp/v3"
+	"github.com/mackerelio/go-osstat/cpu"
+	"github.com/mackerelio/go-osstat/disk"
 	"github.com/mackerelio/go-osstat/memory"
 	"github.com/mackerelio/go-osstat/network"
 )
@@ -46,4 +49,36 @@ func GetNetworkLoad() string {
 		return errorMessage
 	}
 	return stats
+}
+
+func GetDiskLoad() string {
+	diskInfo, err := disk.Get()
+	if err != nil {
+		return errorMessage
+	}
+	stats := ""
+	for _, dir := range diskInfo {
+		if dir.ReadsCompleted == 0 || dir.WritesCompleted == 0 {
+			continue
+		}
+		stats += fmt.Sprintf(
+			"<b>Showing info for disk</b> <i>%s</i>\n<b>Writes:</b> <i>%d</i>\n<b>Reads:</b> <i>%d</i>\n\n",
+			dir.Name,
+			dir.WritesCompleted,
+			dir.ReadsCompleted,
+		)
+	}
+	if stats == "" {
+		return errorMessage
+	}
+	return stats
+}
+
+func GetCpuLoad() string {
+	cpuInfo, err := cpu.Get()
+	if err != nil {
+		return errorMessage
+	}
+	pp.Print(cpuInfo)
+	return "aaaa"
 }
