@@ -32,46 +32,48 @@ func GetMemoryLoad() string {
 }
 
 func GetNetworkLoad() string {
-	networkInfo, err := network.Get()
+	networksInfo, err := network.Get()
 	if err != nil {
 		return errorMessage
 	}
-	stats := ""
-	for _, driver := range networkInfo {
-		stats += fmt.Sprintf(
+
+	var metrics string
+	for _, inbound := range networksInfo {
+		metrics += fmt.Sprintf(
 			"<b>Showing info for interface</b> <i>%s</i>\n<b>Outcome:</b> %d <i>bytes</i>\n<b>Income:</b> %d <i>bytes</i>\n\n",
-			driver.Name,
-			driver.RxBytes,
-			driver.TxBytes,
+			inbound.Name,
+			inbound.RxBytes,
+			inbound.TxBytes,
 		)
 	}
-	if stats == "" {
+	if metrics == "" {
 		return errorMessage
 	}
-	return stats
+	return metrics
 }
 
 func GetDiskLoad() string {
-	diskInfo, err := disk.Get()
+	disksInfo, err := disk.Get()
 	if err != nil {
 		return errorMessage
 	}
-	stats := ""
-	for _, dir := range diskInfo {
+
+	var metrics string
+	for _, dir := range disksInfo {
 		if dir.ReadsCompleted == 0 || dir.WritesCompleted == 0 {
 			continue
 		}
-		stats += fmt.Sprintf(
+		metrics += fmt.Sprintf(
 			"<b>Showing info for disk</b> <i>%s</i>\n<b>Writes:</b> <i>%d</i>\n<b>Reads:</b> <i>%d</i>\n\n",
 			dir.Name,
 			dir.WritesCompleted,
 			dir.ReadsCompleted,
 		)
 	}
-	if stats == "" {
+	if metrics == "" {
 		return errorMessage
 	}
-	return stats
+	return metrics
 }
 
 func GetCpuLoad() string {
@@ -79,6 +81,8 @@ func GetCpuLoad() string {
 	if err != nil {
 		return errorMessage
 	}
+
 	pp.Print(cpuInfo)
-	return "aaaa"
+
+	return "Currently not implemented"
 }

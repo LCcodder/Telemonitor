@@ -1,0 +1,10 @@
+version: 'pre-release'
+OS-compatible:
+- 'Ubuntu (x86 - 64_amd)'
+TODO:
+- Docker support 
+- CPU info handler
+- Deployment code
+message: '_'
+
+cpuid-licence: 'BSD-clause'
