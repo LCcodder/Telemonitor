@@ -5,7 +5,7 @@ Deploy `Telemonitor` instance on your server and monitor metrics via your phone
 
 
 ## Deployment:
-+ Deployment is much easier than in `Graphana` or other monitoring utilities
++ Deployment is much easier than in `Grafana` or other monitoring utilities
 
 1) Install `Docker` and `Docker compose` with [this](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-22-04) guide
 
