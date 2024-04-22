@@ -13,11 +13,11 @@ Deploy `Telemonitor` instance on your server and monitor metrics via your phone
 ```sh
 git clone https://github.com/LCcodder/Telemonitor && cd Telemonitor
 ```
-3) Paste your `Telegram` bot token in `TOKEN` variable inside `docker-compose.yaml`
+3) Paste your `Telegram` bot token in `TOKEN` variable inside `Dockerfile`
 4) Configure whitelist in `config.json` file *(paste usernames, not display names)*
-5) Run `docker-compose.yaml` file
+5) Build and run `Docker` container
 ```sh
-docker compose up --build && docker compose up
+docker build . -t telemonitor && docker run telemonitor
 ```
 ---
 Created with `go-telegram`, `docker` proprietary lib and `sysinfo`
