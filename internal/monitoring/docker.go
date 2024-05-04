@@ -20,7 +20,7 @@ type DockerMetrics struct {
 }
 
 func (d *DockerMetrics) GetRunningContainers(ctx context.Context, limit int) string {
-	if limit > 20 {
+	if limit > 20 || limit < 1 {
 		return dockerErrorMessage
 	}
 	opts := container.ListOptions{Limit: limit}
@@ -31,9 +31,9 @@ func (d *DockerMetrics) GetRunningContainers(ctx context.Context, limit int) str
 	pp.Print(containers)
 	return ""
 }
-func (d *DockerMetrics) GetAllContainers(ctx context.Context, limit int) string {
 
-	if limit > 20 {
+func (d *DockerMetrics) GetAllContainers(ctx context.Context, limit int) string {
+	if limit > 20 || limit < 1 {
 		return dockerErrorMessage
 	}
 	opts := container.ListOptions{Limit: limit, Filters: filters.Args{}}
@@ -46,8 +46,9 @@ func (d *DockerMetrics) GetAllContainers(ctx context.Context, limit int) string 
 
 	for _, container := range containers {
 		message += fmt.Sprintf(
-			"`[%s]`",
+			"<b>[%s]</b>: <i>%s</i>\n",
 			container.ID,
+			container.Names[0],
 		)
 	}
 
