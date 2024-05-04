@@ -12,6 +12,9 @@ type Config struct {
 		Whitelist []string `json:"whitelist"`
 		Admin     string   `json:"admin"`
 	} `json:"__auth"`
+	Messages struct {
+		Welcome string `json:"welcome"`
+	} `json:"messages"`
 }
 
 var (

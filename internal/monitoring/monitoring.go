@@ -5,19 +5,20 @@ import (
 
 	"github.com/k0kubun/pp/v3"
 	"github.com/mackerelio/go-osstat/cpu"
+
 	"github.com/mackerelio/go-osstat/disk"
 	"github.com/mackerelio/go-osstat/memory"
 	"github.com/mackerelio/go-osstat/network"
 )
 
 const (
-	errorMessage string = "An <b>unknown error</b> was occured during metrics gaining...\nMake sure you running bot in <i>sudo</i>"
+	sysmetricsErrorMessage string = "An <b>unknown error</b> was occured during metrics gaining...\nMake sure you running bot in <i>sudo</i>"
 )
 
 func GetMemoryLoad() string {
 	memoryInfo, err := memory.Get()
 	if err != nil {
-		return errorMessage
+		return sysmetricsErrorMessage
 	}
 
 	return fmt.Sprintf(
@@ -34,7 +35,7 @@ func GetMemoryLoad() string {
 func GetNetworkLoad() string {
 	networksInfo, err := network.Get()
 	if err != nil {
-		return errorMessage
+		return sysmetricsErrorMessage
 	}
 
 	var metrics string
@@ -47,7 +48,7 @@ func GetNetworkLoad() string {
 		)
 	}
 	if metrics == "" {
-		return errorMessage
+		return sysmetricsErrorMessage
 	}
 	return metrics
 }
@@ -55,7 +56,7 @@ func GetNetworkLoad() string {
 func GetDiskLoad() string {
 	disksInfo, err := disk.Get()
 	if err != nil {
-		return errorMessage
+		return sysmetricsErrorMessage
 	}
 
 	var metrics string
@@ -71,7 +72,7 @@ func GetDiskLoad() string {
 		)
 	}
 	if metrics == "" {
-		return errorMessage
+		return sysmetricsErrorMessage
 	}
 	return metrics
 }
@@ -79,7 +80,7 @@ func GetDiskLoad() string {
 func GetCpuLoad() string {
 	cpuInfo, err := cpu.Get()
 	if err != nil {
-		return errorMessage
+		return sysmetricsErrorMessage
 	}
 
 	pp.Print(cpuInfo)

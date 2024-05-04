@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"telemonitor/config"
 	"telemonitor/internal/monitoring"
 	"telemonitor/internal/system_info"
 
@@ -12,14 +13,14 @@ import (
 )
 
 var (
-	welcomeMessage string   = "<b>All Commands:</b>\n /all - shows all of the available system metrics\n /sysinfo - shows system info on running machine\n /mem - shows RAM and swap memory load\n /disk - shows '/' disk partition load and write/read data\n /cpu - shows cpu load stats\n /net - shows basic network statistics"
+	welcomeMessage *string  = &config.Cfg.Messages.Welcome
 	commandsList   []string = []string{"/mem", "/help", "/info", "/disk", "/net"}
 )
 
 func HelpHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 	_, err := b.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID:    update.Message.Chat.ID,
-		Text:      welcomeMessage,
+		Text:      *welcomeMessage,
 		ParseMode: models.ParseModeHTML,
 	})
 	if err != nil {

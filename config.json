@@ -1,1 +1,9 @@
-{"__auth":{"whitelist":["fsd","hj","koweg","s0_er"],"admin":"s0_er"}}
+{
+    "__auth":{
+        "whitelist": ["fsd","hj","koweg","s0_er"],
+        "admin":"s0_er"
+    },
+    "messages": {
+        "welcome": "<b>All Commands:</b>\n /all - shows all of the available system metrics\n /sysinfo - shows system info on running machine\n /mem - shows RAM and swap memory load\n /disk - shows '/' disk partition load and write/read data\n /cpu - shows cpu load stats\n /net - shows basic network statistics"
+    }
+}
