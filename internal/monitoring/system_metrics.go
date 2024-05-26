@@ -54,6 +54,7 @@ func GetNetworkLoad() string {
 }
 
 func GetDiskLoad() string {
+	//return "/"
 	disksInfo, err := disk.Get()
 	if err != nil {
 		return sysmetricsErrorMessage
@@ -85,5 +86,7 @@ func GetCpuLoad() string {
 
 	pp.Print(cpuInfo)
 
-	return "Currently not implemented"
+	return fmt.Sprintf(
+		"",
+	)
 }

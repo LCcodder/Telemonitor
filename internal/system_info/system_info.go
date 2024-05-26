@@ -9,9 +9,9 @@ import (
 )
 
 var (
-	errorMessage string = "<b>An error occured while trying to gather information about your system...</b>"
-	pid          int    = os.Getpid()
-	ipv4Address  []byte = *getOutboundIP()
+	//errorMessage string = "<b>An error occured while trying to gather information about your system...</b>"
+	Pid         int    = os.Getpid()
+	Ipv4Address []byte = *getOutboundIP()
 )
 
 // Must work, but can f up with unknown DNS settings
@@ -36,8 +36,8 @@ func GetSystemInfo() string {
 	// Telebot instance info (host may not gather correctly)
 	metrics += fmt.Sprintf(
 		"Your <i>Telebot</i> instance is running on host: <b>%x</b> with PID: <b>%d</b>\n\n<b>System information:</b>\n",
-		ipv4Address,
-		pid,
+		Ipv4Address,
+		Pid,
 	)
 
 	// Tested only on Ubuntu 22.04 with WSL
