@@ -3,7 +3,6 @@ package monitoring
 import (
 	"fmt"
 
-	"github.com/k0kubun/pp/v3"
 	"github.com/mackerelio/go-osstat/cpu"
 
 	"github.com/mackerelio/go-osstat/disk"
@@ -12,13 +11,13 @@ import (
 )
 
 const (
-	sysmetricsErrorMessage string = "An <b>unknown error</b> was occured during metrics gaining...\nMake sure you running bot in <i>sudo</i>"
+	metricsErrorMessage string = "An <b>unknown error</b> was occured during metrics gaining...\nMake sure you running bot in <i>sudo</i>"
 )
 
 func GetMemoryLoad() string {
 	memoryInfo, err := memory.Get()
 	if err != nil {
-		return sysmetricsErrorMessage
+		return metricsErrorMessage
 	}
 
 	return fmt.Sprintf(
@@ -35,7 +34,7 @@ func GetMemoryLoad() string {
 func GetNetworkLoad() string {
 	networksInfo, err := network.Get()
 	if err != nil {
-		return sysmetricsErrorMessage
+		return metricsErrorMessage
 	}
 
 	var metrics string
@@ -48,13 +47,12 @@ func GetNetworkLoad() string {
 		)
 	}
 	if metrics == "" {
-		return sysmetricsErrorMessage
+		return metricsErrorMessage
 	}
 	return metrics
 }
 
 func GetDiskLoad() string {
-	//return "/"
 	disksInfo, err := disk.Get()
 	if err != nil {
 		return sysmetricsErrorMessage
@@ -81,12 +79,11 @@ func GetDiskLoad() string {
 func GetCpuLoad() string {
 	cpuInfo, err := cpu.Get()
 	if err != nil {
-		return sysmetricsErrorMessage
+		return metricsErrorMessage
 	}
 
-	pp.Print(cpuInfo)
-
 	return fmt.Sprintf(
-		"",
+		"<b>CPU load:</b> <i>%d (percents)</i>",
+		uint16((float32(cpuInfo.System)+float32(cpuInfo.User))/float32(cpuInfo.Total)*100),
 	)
 }

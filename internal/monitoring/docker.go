@@ -3,14 +3,12 @@ package monitoring
 import (
 	"context"
 	"fmt"
-	"log"
+	"strings"
 	"time"
 
 	"github.com/docker/docker/api/types/container"
-	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/client"
-	"github.com/k0kubun/pp/v3"
 )
 
 const (
@@ -21,29 +19,14 @@ type DockerMetrics struct {
 	Client client.Client
 }
 
-func (d *DockerMetrics) GetRunningContainers(ctx context.Context, limit int) string {
-	if limit > 20 || limit < 1 {
-		return dockerErrorMessage
-	}
-
-	opts := container.ListOptions{Limit: limit}
-	containers, err := d.Client.ContainerList(ctx, opts)
-	if err != nil {
-		return dockerErrorMessage
-	}
-	pp.Print(containers)
-	return ""
-}
-
 func (d *DockerMetrics) GetAllContainers(ctx context.Context, limit int) string {
 	if limit > 20 || limit < 1 {
 		return dockerErrorMessage
 	}
 
-	opts := container.ListOptions{Limit: limit, Filters: filters.Args{}}
+	opts := container.ListOptions{Limit: limit, All: true}
 	containers, err := d.Client.ContainerList(ctx, opts)
 	if err != nil {
-		log.Fatal(err)
 		return dockerErrorMessage
 	}
 
@@ -87,7 +70,21 @@ func (d *DockerMetrics) GetImages(ctx context.Context) string {
 		return dockerErrorMessage
 	}
 
-	pp.Print(images)
+	var message string
 
-	return ""
+	for _, image := range images {
+		tag := image.RepoTags[0]
+		if strings.Contains(tag, "<") {
+			tag = "none"
+		}
+		message += fmt.Sprintf(
+			"<b>%s</b>\n<i>%s</i>\nCreated at: %s\nSize (mb): %d\n\n",
+			tag,
+			image.ID,
+			time.Unix(image.Created, 0).String(),
+			image.Size/1024/1024,
+		)
+	}
+
+	return message
 }

@@ -29,7 +29,7 @@ func main() {
 		system_info.Pid,
 	)
 
-	if !isRoot() {
+	if !isRunningWithRoot() {
 		fmt.Println("[Warning] Telemonitor must run in sudo mode to use all functions properly")
 	}
 
@@ -60,18 +60,24 @@ func main() {
 }
 
 func registerHandlers(b *bot.Bot) {
-	b.RegisterHandler(bot.HandlerTypeMessageText, "/help", 0, commands.HelpHandler)
+	// binding help command handler to all possible start commands
+	for _, helpCommand := range []string{"/help", "/start", "/bot", "/hello"} {
+		b.RegisterHandler(bot.HandlerTypeMessageText, helpCommand, 0, commands.HelpHandler)
+	}
+	b.RegisterHandler(bot.HandlerTypeMessageText, "/commands", 0, commands.CommandsMessageHandler)
 
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/containers", 0, commands.ContainersHandler)
+	b.RegisterHandler(bot.HandlerTypeMessageText, "/images", 0, commands.ImagesHandler)
 
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/mem", 0, commands.MemoryLoadHandler)
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/net", 0, commands.NetworkLoadHandler)
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/cpu", 0, commands.CpuLoadHandler)
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/disk", 0, commands.DiskLoadHandler)
+	b.RegisterHandler(bot.HandlerTypeMessageText, "/rep", 0, commands.FullrepHandler)
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/sysinfo", 0, commands.SystemInfoHandler)
 }
 
-func isRoot() bool {
+func isRunningWithRoot() bool {
 	currentUser, err := user.Current()
 	if err != nil {
 		log.Fatalf("[isRoot] Unable to get current user: %s", err)
